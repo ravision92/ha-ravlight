@@ -1,0 +1,24 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "data": {"host": "Host", "port": "Port"},
+        "description": "Enter the IP address or local hostname of the RavLight device."
+      }
+    },
+    "error": {"cannot_connect": "Cannot connect to the RavLight device", "invalid_device": "The host did not identify itself as a RavLight device"}
+  },
+  "entity": {
+    "button": {
+      "highlight": {"name": "Identify fixture"},
+      "release_dmx": {"name": "Release DMX override"},
+      "clear_fault": {"name": "Clear motor fault"},
+      "stop": {"name": "Emergency stop"}
+    },
+    "sensor": {
+      "temperature": {"name": "Temperature"}, "uptime": {"name": "Uptime"}, "total_hours": {"name": "Total hours"},
+      "motor_state": {"name": "Motor state"}, "position_cm": {"name": "Position"}, "driver_temperature": {"name": "Driver temperature"}, "fault_flags": {"name": "Fault flags"}
+    },
+    "binary_sensor": {"dmx_active": {"name": "DMX active"}, "homed": {"name": "Homed"}}
+  }
+}
