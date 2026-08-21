@@ -1,6 +1,6 @@
 # RavLight Home Assistant integration
 
-HACS custom integration for RavLight firmware devices, including Orion motorized winch fixtures.
+HACS custom integration for [RavLight](https://ravlight.com) firmware devices, including Orion motorized winch fixtures.
 
 ## Install
 
