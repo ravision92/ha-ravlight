@@ -32,6 +32,7 @@
       "fault_flags": {"name": "Fault flags"}
     },
     "binary_sensor": {
+      "online": {"name": "Online"},
       "dmx_active": {"name": "DMX active"},
       "homed": {"name": "Homed"}
     }

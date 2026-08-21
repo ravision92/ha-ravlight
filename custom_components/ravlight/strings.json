@@ -23,6 +23,10 @@
       "temperature": {"name": "Temperature"}, "uptime": {"name": "Uptime"}, "total_hours": {"name": "Total hours"},
       "motor_state": {"name": "Motor state"}, "position_cm": {"name": "Position"}, "driver_temperature": {"name": "Driver temperature"}, "fault_flags": {"name": "Fault flags"}
     },
-    "binary_sensor": {"dmx_active": {"name": "DMX active"}, "homed": {"name": "Homed"}}
+    "binary_sensor": {
+      "online": {"name": "Online"},
+      "dmx_active": {"name": "DMX active"},
+      "homed": {"name": "Homed"}
+    }
   }
 }
