@@ -28,7 +28,13 @@ SENSORS = (
     RavLightSensorDescription(key="fault_flags", translation_key="fault_flags", entity_category=EntityCategory.DIAGNOSTIC, source="motor"),
 )
 
-_API_KEYS = {"driver_temperature": "driverTemp"}
+_API_KEYS = {
+    "uptime": "uptime_sec",
+    "motor_state": "state",
+    "position_cm": "positionCm",
+    "driver_temperature": "driverTemp",
+    "fault_flags": "faultFlags",
+}
 
 
 class RavLightSensor(RavLightCoordinatorEntity, SensorEntity):
@@ -50,9 +56,18 @@ class RavLightSensor(RavLightCoordinatorEntity, SensorEntity):
     @property
     def native_value(self) -> Any:
         source = self.coordinator.data.get(self.entity_description.source) or {}
-        return source.get(_API_KEYS.get(self.entity_description.key, self.entity_description.key))
+        value = source.get(_API_KEYS.get(self.entity_description.key, self.entity_description.key))
+        # TMC2209 firmware returns 0 when no driver-temperature reading is available.
+        if self.entity_description.key == "driver_temperature" and (value is None or value <= 0):
+            return None
+        return value
 
 
 async def async_setup_entry(hass, entry, async_add_entities) -> None:
     """Set up RavLight sensors."""
-    async_add_entities(RavLightSensor(entry.runtime_data, description) for description in SENSORS)
+    status = entry.runtime_data.data["status"]
+    async_add_entities(
+        RavLightSensor(entry.runtime_data, description)
+        for description in SENSORS
+        if description.key != "temperature" or status.get("temp") is not None
+    )

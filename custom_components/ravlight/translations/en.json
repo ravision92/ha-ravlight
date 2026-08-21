@@ -4,6 +4,10 @@
       "user": {
         "data": {"host": "Host", "port": "Port"},
         "description": "Enter the IP address or local hostname of the RavLight device."
+      },
+      "discovery": {
+        "data": {"host": "RavLight device"},
+        "description": "Select a device found by the RavLight network scan. The device you entered is also included."
       }
     },
     "error": {

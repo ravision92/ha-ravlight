@@ -51,6 +51,26 @@ class RavLightApiClient:
         """Return compiled firmware features."""
         return await self._request_json("GET", "/api/features")
 
+    async def async_start_discovery(self) -> dict[str, Any]:
+        """Start the firmware's UDP discovery scan."""
+        return await self._request_json("GET", "/discover?espnow=0")
+
+    async def async_get_discovered_devices(self) -> list[dict[str, Any]]:
+        """Return devices found by the most recent firmware discovery scan."""
+        try:
+            async with asyncio.timeout(10):
+                async with self._session.get(f"{self._base_url}/devices") as response:
+                    response.raise_for_status()
+                    payload = await response.json(content_type=None)
+        except (TimeoutError, aiohttp.ClientError) as err:
+            raise RavLightConnectionError(str(err)) from err
+        except (ValueError, aiohttp.ContentTypeError) as err:
+            raise RavLightInvalidResponseError(str(err)) from err
+
+        if not isinstance(payload, list) or not all(isinstance(device, dict) for device in payload):
+            raise RavLightInvalidResponseError("Expected a JSON array of devices")
+        return payload
+
     async def async_get_motor_status(self) -> dict[str, Any] | None:
         """Return Orion motor status, or None if the fixture does not expose it."""
         try:
