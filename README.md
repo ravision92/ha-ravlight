@@ -7,7 +7,7 @@ HACS custom integration for RavLight firmware devices, including Orion motorized
 1. In HACS, add this repository as an **Integration** custom repository.
 2. Download **RavLight** and restart Home Assistant.
 3. Go to **Settings → Devices & services → Add integration**, select **RavLight**, and enter the IP address or `.local` hostname of any one RavLight device.
-4. The entered device performs RavLight's UDP network scan; select the desired fixture from the results.
+4. The entered device is added and performs RavLight's UDP network scan. Select any additional fixtures to add in the same setup session.
 
 ## What it provides
 
