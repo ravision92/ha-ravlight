@@ -34,6 +34,18 @@ from .const import (
 _LOGGER = logging.getLogger(__name__)
 
 
+def output_is_active(output: dict[str, Any]) -> bool:
+    """Return whether a configured LED output drives anything.
+
+    An output with no pixels is disabled, and a clock follower is the clock
+    line of another output rather than an output of its own.
+    """
+    return (
+        int(output.get("count", 0) or 0) > 0
+        and int(output.get("proto", 0) or 0) != LED_PROTOCOL_CLOCK_FOLLOWER
+    )
+
+
 class RavLightDataUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
     """Fetch and coordinate the state of one RavLight device."""
 
@@ -104,17 +116,8 @@ class RavLightDataUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
 
     @property
     def active_outputs(self) -> list[dict[str, Any]]:
-        """Return outputs that actually drive something.
-
-        An output with no pixels is disabled, and a clock follower is the clock
-        line of another output rather than an output of its own.
-        """
-        return [
-            output
-            for output in self.outputs
-            if int(output.get("count", 0) or 0) > 0
-            and int(output.get("proto", 0) or 0) != LED_PROTOCOL_CLOCK_FOLLOWER
-        ]
+        """Return the outputs that actually drive something."""
+        return [output for output in self.outputs if output_is_active(output)]
 
     async def _async_update_data(self) -> dict[str, Any]:
         try:

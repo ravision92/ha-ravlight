@@ -72,9 +72,6 @@
       "highlight": {
         "name": "Identify fixture"
       },
-      "led_highlight": {
-        "name": "Identify LED outputs"
-      },
       "restart": {
         "name": "Restart"
       },
@@ -92,6 +89,9 @@
       },
       "release_dmx": {
         "name": "Release DMX override"
+      },
+      "identify_output": {
+        "name": "Identify output {output}"
       }
     },
     "sensor": {

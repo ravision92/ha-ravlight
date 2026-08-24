@@ -46,9 +46,10 @@ async def test_entities_follow_the_fixture(hass: HomeAssistant, patched_client) 
     # No temperature module on this board, and no motor on this fixture.
     assert "temperature" not in keys
     assert not {"motor_state", "position", "homed", "home", "release_dmx"} & keys
-    # Elyon has no /highlight route, so identify is the only LED button.
+    # Elyon has no /highlight route: its fixture-wide identify is built from
+    # the per-output wipes, and every configured output gets its own button.
     assert "highlight" in keys
-    assert "led_highlight" not in keys
+    assert "identify_output_1" in keys
 
 
 async def test_device_registry_entry(hass: HomeAssistant, patched_client) -> None:
@@ -172,7 +173,77 @@ async def test_orion_gets_motor_entities(hass: HomeAssistant, patched_client) ->
     assert {"motor_state", "position", "homed", "motor_fault", "motor_busy"} <= keys
     assert {"home", "stop", "clear_fault", "release_dmx"} <= keys
     # Orion has both its own identify sequence and LED outputs to identify.
-    assert {"highlight", "led_highlight", "active_outputs"} <= keys
+    assert {"highlight", "identify_output_1", "active_outputs"} <= keys
 
     state = hass.states.get("sensor.rvd008_position")
     assert state is not None and state.state == "128.4"
+
+
+async def test_identify_sends_the_output_index_in_the_body(
+    hass: HomeAssistant, patched_client
+) -> None:
+    """The firmware reads `out` as a body param and 400s on a query string."""
+    patched_client.async_get_config.return_value = {
+        "version": 2,
+        "project": "Elyon",
+        "network": {"id": "RVD008"},
+        "dmx": {"input": 2, "universe": 0},
+        "fixture": {"outputs": [
+            {"proto": 3, "count": 300, "univ": 0, "ch": 1},
+            {"proto": 3, "count": 300, "univ": 2, "ch": 177},
+            {"proto": 0, "count": 0},
+        ]},
+    }
+    entry = await _setup(hass, unique_id=MAC)
+
+    keys = {
+        registry_entry.unique_id.removeprefix(f"{MAC}_")
+        for registry_entry in er.async_entries_for_config_entry(
+            er.async_get(hass), entry.entry_id
+        )
+    }
+    # Two configured outputs, so two per-output buttons — not one per socket.
+    assert {"identify_output_1", "identify_output_2"} <= keys
+    assert "identify_output_3" not in keys
+
+    await hass.services.async_call(
+        "button",
+        "press",
+        {"entity_id": "button.rvd008_identify_output_2"},
+        blocking=True,
+    )
+    # Index is 0-based on the wire, and goes in the body.
+    patched_client.async_post.assert_called_with("/ledhighlight", {"out": 1})
+
+
+async def test_an_older_manifest_is_not_offered_as_an_update(
+    hass: HomeAssistant, patched_client
+) -> None:
+    """A hand-flashed build is newer than the feed — that is not an update."""
+    patched_client.async_get_ota.return_value = {
+        "current": "2.23.15", "latest": "2.23.14", "notes": "older release",
+        "url": "", "checked": True, "checking": False, "available": False,
+        "error": "",
+    }
+    await _setup(hass, unique_id=MAC)
+
+    state = hass.states.get("update.rvd008_firmware")
+    assert state is not None
+    assert state.state == "off"
+    assert state.attributes["installed_version"] == "2.23.15"
+    assert state.attributes["latest_version"] == "2.23.15"
+
+
+async def test_an_available_update_is_offered(hass: HomeAssistant, patched_client) -> None:
+    """When the device says there is one, it shows up with its notes."""
+    patched_client.async_get_ota.return_value = {
+        "current": "2.23.15", "latest": "2.24.1", "notes": "Zeroconf discovery",
+        "url": "https://ravlight.com/firmware/elyon_quinled_octa_fw.bin",
+        "checked": True, "checking": False, "available": True, "error": "",
+    }
+    await _setup(hass, unique_id=MAC)
+
+    state = hass.states.get("update.rvd008_firmware")
+    assert state.state == "on"
+    assert state.attributes["latest_version"] == "2.24.1"
+    assert state.attributes["release_summary"] == "Zeroconf discovery"
