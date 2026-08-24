@@ -10,6 +10,8 @@ HACS custom integration for [RavLight](https://ravlight.com) firmware devices �
 2. Download **RavLight** and restart Home Assistant.
 3. Devices running firmware newer than 2.23.15 announce themselves — accept the discovery notification and you are done. Otherwise go to **Settings → Devices & services → Add integration**, select **RavLight**, and either scan the network or enter one device's address.
 
+The RavLight icon ships with the integration (`custom_components/ravlight/brand/`) and needs no brands-repository submission — Home Assistant 2026.3 and newer serve brand images bundled in a custom integration, and prefer them over the CDN. On older versions the integration simply shows the default icon.
+
 ## Finding devices
 
 Three ways, all built in:
