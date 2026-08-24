@@ -32,7 +32,7 @@ Entities are created from what the device reports about itself (`/api/features`,
 
 **Veyron** — active personality (by name) with its channel footprint, and the DMX start addresses of the pixel, accent and function blocks.
 
-**Elyon / Axon** — number of active outputs, total pixel count, and a per-output breakdown (protocol, pixels, universe, start channel) as attributes. Outputs wired as a clock line for a clocked chipset are not counted as outputs of their own.
+**Elyon / Axon** — number of active outputs, total pixel count, a per-output breakdown (protocol, pixels, universe, start channel) as attributes, and an identify button per configured output that wipes that run white. Outputs wired as a clock line for a clocked chipset are not counted as outputs of their own. Elyon serves no fixture-wide identify route, so its "Identify fixture" button wipes each output in turn.
 
 **Orion** — motor state, position in cm with its travel limits, driver temperature, fault flags, StallGuard result, homed, moving, manual override, plus run homing, emergency stop, clear fault and release DMX override. Orion boards that also drive LED outputs get the Elyon entities as well.
 
@@ -42,7 +42,7 @@ Factory reset, OTA upload, limit capture, StallGuard calibration and continuous 
 
 - **Devices are identified by their hardware MAC**, not by the device name. The name is editable from the web UI, and renaming a fixture previously created a second device and orphaned every entity of the first. Existing installations are migrated in place — same device row, same entity rows, re-keyed — the first time each device is reachable after the update. Entities you had customised keep their history and settings.
 - **Discovery**: mDNS and DHCP entries in the manifest, plus a direct UDP scan in the setup dialog. The first device no longer has to be typed in by hand, and a device that changes address is followed instead of going unavailable.
-- **Every fixture family is covered**, driven by what the device reports rather than by hardcoded assumptions. Notably Elyon has no `/highlight` route at all — identify has to use `/ledhighlight` there — which the original mapped to the wrong endpoint on that fixture.
+- **Every fixture family is covered**, driven by what the device reports rather than by hardcoded assumptions. Notably Elyon has no `/highlight` route at all: identify goes through `/ledhighlight`, which is per-output and wants the index in the POST **body** (a query string is answered 400). Verified against a QuinLED Octa on the bench.
 - **The additional-devices selection now works.** It hung off `async_on_create_entry`, which is not a config-flow hook, so the extra fixtures a scan found were silently never added.
 - **One request per cycle instead of two.** The configuration is only re-read when the device says it changed, using the `cfg_rev`/`cfg_hash` fields that already ride along in every status reply.
 - **The WiFi password is dropped on arrival.** `/api/config` serves it in clear text; it is stripped in the API client so it cannot reach an entity attribute or a diagnostics download.

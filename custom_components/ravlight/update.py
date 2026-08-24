@@ -43,11 +43,17 @@ class RavLightUpdateEntity(RavLightCoordinatorEntity, UpdateEntity):
     def latest_version(self) -> str | None:
         """Return the newest firmware the device knows about.
 
-        Before the device has checked, the honest answer is "the one running" —
-        reporting nothing would make Home Assistant show the update as unknown,
-        and reporting an empty string would look like a downgrade.
+        Reported only when the device itself says an update is available. Home
+        Assistant decides "update available" by comparing these two strings,
+        while the firmware compares versions properly — and a manifest that
+        lags behind a hand-flashed build really does name an older version
+        than the one running, which would otherwise be offered as an update.
+
+        Before any check has happened the honest answer is "the one running":
+        reporting nothing would show as unknown, and an empty string would
+        read as a downgrade.
         """
-        if not self._ota.get("checked"):
+        if not self._ota.get("available"):
             return self.installed_version
         return self._ota.get("latest") or self.installed_version
 

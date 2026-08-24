@@ -54,12 +54,12 @@ class RavLightApiClient:
         path: str,
         *,
         expect_json: bool = True,
-        params: Mapping[str, str | int] | None = None,
+        data: Mapping[str, str | int] | None = None,
     ) -> Any:
         try:
             async with asyncio.timeout(10):
                 async with self._session.request(
-                    method, f"{self._base_url}{path}", params=params
+                    method, f"{self._base_url}{path}", data=data
                 ) as response:
                     if response.status == 404:
                         raise RavLightNotFoundError(path)
@@ -130,7 +130,12 @@ class RavLightApiClient:
         return payload
 
     async def async_post(
-        self, path: str, params: Mapping[str, str | int] | None = None
+        self, path: str, data: Mapping[str, str | int] | None = None
     ) -> None:
-        """Call an action endpoint."""
-        await self._request("POST", path, expect_json=False, params=params)
+        """Call an action endpoint.
+
+        Parameters go in the form-encoded body, not the query string: the
+        firmware reads them with hasParam(name, true), which is body-only, and
+        answers 400 to a query string it can see perfectly well.
+        """
+        await self._request("POST", path, expect_json=False, data=data)
