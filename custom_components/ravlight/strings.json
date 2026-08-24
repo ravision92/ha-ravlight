@@ -1,32 +1,181 @@
 {
   "config": {
+    "flow_title": "{name}",
     "step": {
       "user": {
-        "data": {"host": "Host", "port": "Port"},
-        "description": "Enter the IP address or local hostname of the RavLight device."
+        "title": "Add RavLight devices",
+        "description": "Scan the network for RavLight fixtures, or enter the address of one.",
+        "menu_options": {
+          "scan": "Scan the network",
+          "manual": "Enter an address"
+        }
       },
-      "discovery": {
-        "data": {"additional_devices": "Additional RavLight devices"},
-        "description": "The device you entered will be added. Optionally select any additional devices to add now."
+      "manual": {
+        "data": {
+          "host": "Host",
+          "port": "Port"
+        },
+        "description": "Enter the IP address or local hostname of the RavLight device. If that device can scan the network, the other fixtures it finds are offered next."
+      },
+      "scan": {
+        "data": {
+          "devices": "RavLight devices"
+        },
+        "description": "Found {count} device(s). Each one you select is added as its own device."
+      },
+      "relay": {
+        "data": {
+          "devices": "Additional RavLight devices"
+        },
+        "description": "The device you entered will be added. It also found the fixtures below — select any you want to add now."
+      },
+      "discovery_confirm": {
+        "title": "Add RavLight device",
+        "description": "Add {fixture} {name} at {host}?"
       }
     },
-    "error": {"cannot_connect": "Cannot connect to the RavLight device", "invalid_device": "The host did not identify itself as a RavLight device"}
+    "error": {
+      "cannot_connect": "Cannot connect to the RavLight device",
+      "invalid_device": "The host did not identify itself as a RavLight device",
+      "scan_unavailable": "The network scan could not start. Devices reply to a fixed UDP port (4211), so Home Assistant needs host networking and that port must be free — enter an address instead."
+    },
+    "abort": {
+      "already_configured": "This RavLight device is already configured",
+      "cannot_connect": "Cannot connect to the RavLight device",
+      "invalid_device": "The host did not identify itself as a RavLight device",
+      "no_devices_found": "No new RavLight devices answered the scan",
+      "no_devices_selected": "No devices were selected"
+    }
   },
   "entity": {
+    "binary_sensor": {
+      "online": {
+        "name": "Online"
+      },
+      "dmx_active": {
+        "name": "DMX active"
+      },
+      "homed": {
+        "name": "Homed"
+      },
+      "motor_fault": {
+        "name": "Motor fault"
+      },
+      "motor_busy": {
+        "name": "Motor moving"
+      },
+      "dmx_override": {
+        "name": "Manual override"
+      }
+    },
     "button": {
-      "highlight": {"name": "Identify fixture"},
-      "release_dmx": {"name": "Release DMX override"},
-      "clear_fault": {"name": "Clear motor fault"},
-      "stop": {"name": "Emergency stop"}
+      "highlight": {
+        "name": "Identify fixture"
+      },
+      "led_highlight": {
+        "name": "Identify LED outputs"
+      },
+      "restart": {
+        "name": "Restart"
+      },
+      "check_update": {
+        "name": "Check for firmware update"
+      },
+      "home": {
+        "name": "Run homing"
+      },
+      "stop": {
+        "name": "Emergency stop"
+      },
+      "clear_fault": {
+        "name": "Clear motor fault"
+      },
+      "release_dmx": {
+        "name": "Release DMX override"
+      }
     },
     "sensor": {
-      "temperature": {"name": "Temperature"}, "uptime": {"name": "Uptime"}, "total_hours": {"name": "Total hours"},
-      "motor_state": {"name": "Motor state"}, "position_cm": {"name": "Position"}, "driver_temperature": {"name": "Driver temperature"}, "fault_flags": {"name": "Fault flags"}
+      "temperature": {
+        "name": "Temperature"
+      },
+      "signal_strength": {
+        "name": "WiFi signal"
+      },
+      "connection": {
+        "name": "Connection",
+        "state": {
+          "ethernet": "Ethernet",
+          "wifi": "WiFi",
+          "access_point": "Access point",
+          "not_connected": "Not connected"
+        }
+      },
+      "ip_address": {
+        "name": "IP address"
+      },
+      "uptime": {
+        "name": "Uptime"
+      },
+      "total_hours": {
+        "name": "Total hours"
+      },
+      "dmx_frame_rate": {
+        "name": "DMX frame rate"
+      },
+      "dmx_source": {
+        "name": "DMX source",
+        "state": {
+          "physical_dmx": "Physical DMX",
+          "artnet": "Art-Net",
+          "sacn": "sACN",
+          "recorded_scene": "Recorded scene",
+          "effects": "Effects engine"
+        }
+      },
+      "universe": {
+        "name": "Universe"
+      },
+      "free_heap": {
+        "name": "Free memory"
+      },
+      "minimum_heap": {
+        "name": "Lowest free memory"
+      },
+      "config_revision": {
+        "name": "Configuration revision"
+      },
+      "personality": {
+        "name": "Personality"
+      },
+      "dmx_address": {
+        "name": "DMX address"
+      },
+      "active_outputs": {
+        "name": "Active outputs"
+      },
+      "total_pixels": {
+        "name": "Total pixels"
+      },
+      "motor_state": {
+        "name": "Motor state"
+      },
+      "position": {
+        "name": "Position"
+      },
+      "driver_temperature": {
+        "name": "Driver temperature"
+      },
+      "fault_flags": {
+        "name": "Fault flags"
+      },
+      "stallguard_result": {
+        "name": "StallGuard result"
+      }
     },
-    "binary_sensor": {
-      "online": {"name": "Online"},
-      "dmx_active": {"name": "DMX active"},
-      "homed": {"name": "Homed"}
+    "update": {
+      "firmware": {
+        "name": "Firmware"
+      }
     }
   }
 }
