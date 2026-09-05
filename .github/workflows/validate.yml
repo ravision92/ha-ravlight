@@ -1,0 +1,42 @@
+name: Validate
+
+# Both checks are required before HACS will list the repository in its store,
+# and they catch manifest and packaging mistakes that only show up on someone
+# else's Home Assistant otherwise. The schedule matters: hassfest tracks the
+# current Home Assistant release, so a rule added upstream can turn this red
+# without anybody touching this repository.
+
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: "0 4 * * 1"
+  workflow_dispatch:
+
+jobs:
+  hassfest:
+    name: hassfest
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: home-assistant/actions/hassfest@master
+
+  hacs:
+    name: HACS
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hacs/action@main
+        with:
+          category: integration
+
+  tests:
+    name: pytest
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: pip install pytest-homeassistant-custom-component
+      - run: pytest

@@ -1,7 +1,10 @@
 {
   "domain": "ravlight",
   "name": "RavLight",
-  "codeowners": [],
+  "codeowners": [
+    "@gmint",
+    "@ravision92"
+  ],
   "config_flow": true,
   "dependencies": [
     "network"
@@ -15,7 +18,7 @@
   "integration_type": "device",
   "iot_class": "local_polling",
   "issue_tracker": "https://github.com/Q-Squared-Systems/ha-ravlight/issues",
-  "version": "0.2.0",
+  "version": "0.2.2",
   "zeroconf": [
     "_ravlight._tcp.local."
   ]

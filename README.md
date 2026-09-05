@@ -2,7 +2,7 @@
 
 HACS custom integration for [RavLight](https://ravlight.com) firmware devices — Veyron pixel bars, Elyon LED controllers, Orion motorized winches and Axon nodes.
 
-> Fork of [Q-Squared-Systems/ha-ravlight](https://github.com/Q-Squared-Systems/ha-ravlight) by George, extended to cover every RavLight fixture family and to find devices without typing addresses. See [What this fork changes](#what-this-fork-changes).
+> The integration started as [@gmint](https://github.com/gmint)'s work at [Q-Squared-Systems/ha-ravlight](https://github.com/Q-Squared-Systems/ha-ravlight), and is maintained by [@gmint](https://github.com/gmint) and [@ravision92](https://github.com/ravision92). See [What changed](#what-changed) for the second round of work.
 
 ## Install
 
@@ -40,7 +40,7 @@ Entities are created from what the device reports about itself (`/api/features`,
 
 Factory reset, OTA upload, limit capture, StallGuard calibration and continuous jog are deliberately not exposed: they are destructive, or they need an operator watching the fixture.
 
-## What this fork changes
+## What changed
 
 - **Devices are identified by their hardware MAC**, not by the device name. The name is editable from the web UI, and renaming a fixture previously created a second device and orphaned every entity of the first. Existing installations are migrated in place — same device row, same entity rows, re-keyed — the first time each device is reachable after the update. Entities you had customised keep their history and settings.
 - **Discovery**: mDNS and DHCP entries in the manifest, plus a direct UDP scan in the setup dialog. The first device no longer has to be typed in by hand, and a device that changes address is followed instead of going unavailable.
@@ -49,7 +49,7 @@ Factory reset, OTA upload, limit capture, StallGuard calibration and continuous 
 - **One request per cycle instead of two.** The configuration is only re-read when the device says it changed, using the `cfg_rev`/`cfg_hash` fields that already ride along in every status reply.
 - **The WiFi password is dropped on arrival.** `/api/config` serves it in clear text; it is stripped in the API client so it cannot reach an entity attribute or a diagnostics download.
 - **Firmware update entity** from the device's own update check (report-only — flashing stays a deliberate operation in the web UI).
-- **Tests** for the flows, the migration and the per-fixture entity tables.
+- **Tests** for the flows, the migration and the per-fixture entity tables, run in CI alongside hassfest and the HACS validation.
 
 ## Compatibility
 
