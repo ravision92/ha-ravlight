@@ -2,7 +2,7 @@
 
 HACS custom integration for [RavLight](https://ravlight.com) firmware devices — Veyron pixel bars, Elyon LED controllers, Orion motorized winches and Axon nodes.
 
-> The integration started as [@gmint](https://github.com/gmint)'s work at [Q-Squared-Systems/ha-ravlight](https://github.com/Q-Squared-Systems/ha-ravlight), and is maintained by [@gmint](https://github.com/gmint) and [@ravision92](https://github.com/ravision92). See [What changed](#what-changed) for the second round of work.
+> The integration started as [@gmint](https://github.com/gmint)'s work at [Q-Squared-Systems/ha-ravlight](https://github.com/ravlight-ha/ha-ravlight), and is maintained by [@gmint](https://github.com/gmint) and [@ravision92](https://github.com/ravision92). See [What changed](#what-changed) for the second round of work.
 
 ## Install
 
