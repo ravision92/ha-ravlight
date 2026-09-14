@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Firmware, fixtures and boards
+    url: https://github.com/ravision92/ravlight-core/issues
+    about: Anything about the devices themselves rather than the Home Assistant integration.
+  - name: RavLight documentation
+    url: https://ravlight.com/docs/home-assistant.html
+    about: Installing, discovery, what each entity means.

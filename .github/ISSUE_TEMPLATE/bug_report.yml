@@ -1,0 +1,65 @@
+name: Bug report
+description: Something in the integration does not behave as it should
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Most of what we need to reproduce a problem is on the device page in
+        Home Assistant and on the fixture's own web page — a minute spent
+        filling this in usually saves a couple of days of questions.
+
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you did, what you expected, what you got instead.
+    validations:
+      required: true
+
+  - type: input
+    id: ha_version
+    attributes:
+      label: Home Assistant version
+      placeholder: "2026.7.4"
+    validations:
+      required: true
+
+  - type: input
+    id: integration_version
+    attributes:
+      label: Integration version
+      description: HACS shows it, or read `version` in the integration's manifest.json.
+      placeholder: "0.2.2"
+    validations:
+      required: true
+
+  - type: input
+    id: firmware
+    attributes:
+      label: Firmware version and fixture
+      description: Both are on the device page, and on the fixture's own web page.
+      placeholder: "2.24.0 — Elyon on QuinLED Dig-Octa"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: discovery
+    attributes:
+      label: How was the device added
+      description: Discovery problems and polling problems have nothing in common, so this narrows it down immediately.
+      options:
+        - Found automatically (mDNS or DHCP)
+        - Network scan from the setup dialog
+        - Typed the address in by hand
+        - Through another device's scan
+        - It was never added — that is the problem
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Log output
+      description: Settings → System → Logs, filtered on "ravlight". Rendered as code, no backticks needed.
+      render: text
